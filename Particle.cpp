@@ -1,9 +1,46 @@
 #include "Particle.h"
 
-
-// TO-DO: Pass arguments to base class constructor
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
+    :m_A(2, numPoints)
 {
+
+    m_ttl = TTL;
+    m_numPoints = numPoints;
+    m_radiansPerSec = ((float)rand() / (RAND_MAX)) * M_PI;
+    m_cartesianPlane.setCenter(0, 0);
+    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
+    //vvvv Initial Velocities. Feel free to change or make random.
+    m_vx = 300;
+    m_vy = 300;
+    //vvvv Initial Colors. Feel free to change or make random.
+    m_color1 = Color(150, 150, 150, 100);
+    m_color2 = Color(0, 0, 0, 50);
+
+    //ALGORITHIM.
+
+        //Initializes theta to random between 0 & PI / 2
+    double lowerBound = 0;
+    double upperBound = M_PI / 2;
+    std::uniform_real_distribution<double> unif(lowerBound, upperBound);
+    std::default_random_engine re;
+    double theta = unif(re);
+
+    //Initializes dtheta
+    double dTheta = 2 * M_PI / (numPoints - 1);
+
+    //Loops j to numPoints
+    for (int j = 0; j < numPoints; ++j)
+    {
+        double r, dx, dy;
+        r = rand() % 60 + 20;
+        dy = r * cos(theta);
+        dy = r * sin(theta);
+        m_A(0, j) = m_centerCoordinate.x + dx;
+        m_A(1, j) = m_centerCoordinate.y + dy;
+        theta += dTheta;
+    }
+
     return;
 }
 
