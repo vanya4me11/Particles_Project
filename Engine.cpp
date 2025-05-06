@@ -10,18 +10,21 @@ Engine::Engine()
 // Run: Constructs Clock, conducts Unit Tests, then loops the engine's functions endlessly
 void Engine::run()
 {
-	// TO-DO: Construct Clock
+	// Constructs clock
+	Clock engineClock;
+
 	// TO-DO: Unit Testing with test Particle
 
 	// Engine functions loop endlessly while the window is open
 	while (m_Window.isOpen())
 	{
-		cout << "Window Open" << endl; // Temporary console output
+		float delta = engineClock.restart().asSeconds(); // Restart clock and register delta time
+		// TO-DO: Convert clock time to seconds?
+
+		cout << "Delta time is " << delta << endl; // Temporary console output to ensure delta time works
+
 		this->input();			// Poll for Windows input
-
-		// TO-DO: Fix delta time argument
-
-		this->update(0.1);		// Logic updates
+		this->update(delta);		// Logic updates
 		this->draw();			// Draw to RenderWindow
 	}
 }
@@ -46,8 +49,8 @@ void Engine::input()
 				for (int i = 0; i < 5; i++)
 				{
 					// TO-DO: numPoints is random number in range [25:50] (second argument)
-					cout << "Random Integer " i << ": " << (randint() % 25) + 25 << endl; // Temporary console output to test random integer generation
-					Particle newParticle(m_Window, 25, sf::Mouse::getPosition(m_Window));
+					cout << "Random Integer " << i << ": " << (rand() % 25) + 25 << endl; // Temporary console output to test random integer generation
+					Particle newParticle(m_Window, (rand() % 25) + 25, sf::Mouse::getPosition(m_Window));
 				}
 			}
 			// Right Click
