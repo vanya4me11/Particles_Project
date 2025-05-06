@@ -147,7 +147,7 @@ void Particle::unitTests()
 
 ///rotate Particle by theta radians counter-clockwise
  ///construct a RotationMatrix R, left mulitply it to m_A
-void rotate(double theta)
+void Particle::rotate(double theta)
 {
     RotationMatrix R (theta);
     m_A = R * m_A;
@@ -155,7 +155,7 @@ void rotate(double theta)
 
 ///Scale the size of the Particle by factor c
 ///construct a ScalingMatrix S, left multiply it to m_A
-void scale(double c)
+void Particle::scale(double c)
 {
     ScalingMatrix S(c);
     m_A = S * m_A;
@@ -163,7 +163,7 @@ void scale(double c)
 
 ///shift the Particle by (xShift, yShift) coordinates
 ///construct a TranslationMatrix T, add it to m_A
-void translate(double xShift, double yShift)
+void Particle::translate(double xShift, double yShift)
 {
     TranslationMatrix T(xShift, yShift, m_A.getCols());
     m_A = T + m_A;
