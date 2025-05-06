@@ -26,6 +26,7 @@ void Engine::run()
 	}
 }
 
+// Input; called every frame the engine is running
 void Engine::input()
 {
 	Event event;
@@ -41,7 +42,13 @@ void Engine::input()
 			// Left Click
 			if (event.mouseButton.button == sf::Mouse::Left)
 			{
-				cout << "Left click" << endl;
+				// Loop to create 5 particles
+				for (int i = 0; i < 5; i++)
+				{
+					// TO-DO: numPoints is random number in range [25:50] (second argument)
+					cout << "Random Integer " i << ": " << (randint() % 25) + 25 << endl; // Temporary console output to test random integer generation
+					Particle newParticle(m_Window, 25, sf::Mouse::getPosition(m_Window));
+				}
 			}
 			// Right Click
 			else if (event.mouseButton.button == sf::Mouse::Right)
