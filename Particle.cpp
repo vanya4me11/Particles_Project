@@ -1,6 +1,24 @@
 #include "Particle.h"
 
 
+// TO-DO: Pass arguments to base class constructor
+Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
+{
+    return;
+}
+
+// NOTE: Header specifies virtual prefix and override suffix; not sure if needed here?
+void Particle::draw(RenderTarget& target, RenderStates states) const
+{
+    return;
+}
+
+// Update
+void Particle::update(float dt)
+{
+    return;
+}
+
 bool Particle::almostEqual(double a, double b, double eps)
 {
 	return fabs(a - b) < eps;
