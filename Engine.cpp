@@ -2,6 +2,7 @@
 
 Engine::Engine()
 {
+	m_Window.create(VideoMode(650, 450), "Particles Project", Style::Default);
 	return;
 }
 
