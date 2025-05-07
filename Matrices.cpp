@@ -140,20 +140,21 @@ namespace Matrices
         }
         return os;
     }
-}
 
 
-RotationMatrix::RotationMatrix(double theta)
-{
-    return;
-}
+    RotationMatrix::RotationMatrix(double theta) : Matrix(0, 0)
+    {
+        return;
+    }
 
-ScalingMatrix::ScalingMatrix(double scale)
-{
-    return;
-}
+    ScalingMatrix::ScalingMatrix(double scale) : Matrix(0, 0)
+    {
+        return;
+    }
 
-TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols)
-{
-    return;
+    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(0, 0)
+    {
+        return;
+    }
+
 }
