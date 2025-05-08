@@ -65,10 +65,35 @@ void Engine::input()
 		m_Window.close();
 	}
 }
+
+ // Update: loop through m_particles with an iterator 
+ //			check TTL for each Particle in the vector ; erase if expired
 void Engine::update(float dtAsSeconds)
 {
-	return;
+		//Create an iteratior
+	for (auto it = m_particles.begin(); it != m_particles.end(); )
+	{
+		//Check TTL
+		if (it->getTTL() > 0.0f)
+		{
+			//Call update
+			it->update(dtAsSeconds);
+
+			//Pass in time differential since the last frame (dt)
+			it->m_ttl -= dtAsSeconds;
+
+			//Increment loop
+			++it;
+		}
+		else
+		{
+			//else Remove particle
+			it = m_particles.erase(it);
+		}
+	}
 }
+
+
 void Engine::draw()
 {
 	m_Window.clear();
