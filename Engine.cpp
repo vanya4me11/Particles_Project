@@ -18,13 +18,10 @@ void Engine::run()
 	// Engine functions loop endlessly while the window is open
 	while (m_Window.isOpen())
 	{
-		float delta = engineClock.restart().asSeconds(); // Restart clock and register delta time
-		// TO-DO: Convert clock time to seconds?
-
-		cout << "Delta time is " << delta << endl; // Temporary console output to ensure delta time works
+		float delta = engineClock.restart().asSeconds(); // Restart clock and register delta time as seconds
 
 		this->input();			// Poll for Windows input
-		this->update(delta);		// Logic updates
+		this->update(delta);	// Logic updates
 		this->draw();			// Draw to RenderWindow
 	}
 }
@@ -78,9 +75,6 @@ void Engine::update(float dtAsSeconds)
 		{
 			//Call update
 			it->update(dtAsSeconds);
-
-			//Pass in time differential since the last frame (dt)
-			it->m_ttl -= dtAsSeconds;
 
 			//Increment loop
 			++it;

@@ -36,6 +36,8 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
         r = rand() % 60 + 20;
         dy = r * cos(theta);
         dy = r * sin(theta);
+        dx = r * cos(theta);
+        dx = r * sin(theta);
         m_A(0, j) = m_centerCoordinate.x + dx;
         m_A(1, j) = m_centerCoordinate.y + dy;
         theta += dTheta;
