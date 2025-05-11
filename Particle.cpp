@@ -1,50 +1,51 @@
 #include "Particle.h"
 
+// .:[Constructor]:.
 Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
-    :m_A(2, numPoints)
+    :m_A(2, numPoints) // Constructs a Matrix of 2 rows and numPoints columns to store a set of coordinates in
 {
-
-    m_ttl = TTL;
-    m_numPoints = numPoints;
-    m_radiansPerSec = ((float)rand() / (RAND_MAX)) * M_PI;
-    m_cartesianPlane.setCenter(0, 0);
-    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
-
-    // TO-DO: m_centerCoordinate is temporarily set to a Vector2f directly from mouseClickPosition, but it should be mapped pixel to coordinates.
-        // Second commented-out declaration is correct, but in early testing it places pixels at strange coordinates.
-        // Unsure if this is a consequence of the early placeholder Particle draw function or if it's in the mapPixelToCoords function.
-        // Let's revisit this once the Particle draw function is more complete as it should be.
-    m_centerCoordinate = Vector2f(mouseClickPosition.x, mouseClickPosition.y);
-    //m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
+    m_ttl = TTL;                                                                            // Particle life duration, retrieves via a constant
+    m_numPoints = numPoints;                                                                // Number of points, passed in from initialization
+    m_radiansPerSec = ((float)rand() / (RAND_MAX)) * M_PI;                                  // Radians Per Second
+    m_cartesianPlane.setCenter(0, 0);                                                       // Sets Cartesian Plane center to 0, 0
+    m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);              // Sets size of Cartesian Plane according to Window size
+    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);     // Sets Center Coordinate to mouse click position, mapped to Cartesian Plane
  
-    //vvvv Initial Velocities. Feel free to change or make random.
-    m_vx = 300;
-    m_vy = 300;
-    //vvvv Initial Colors. Feel free to change or make random.
-    m_color1 = Color(150, 150, 150, 100);
-    m_color2 = Color(0, 0, 0, 50);
+    // Initial Velocities; random range between [100:500]
+    m_vx = rand() % 401 + 100;
+    m_vy = rand() % 401 + 100;
 
-    //ALGORITHIM.
+    // Initial Colors; currently greyscale, but can be made random colors.
+    m_color1 = Color(150, 150, 150, 100);                                                   // Center color
+    m_color2 = Color(0, 0, 0, 50);                                                          // Outer color, blended to as a gradient
 
-        //Initializes theta to random between 0 & PI / 2
+    ////////////////
+    // Algorithm
+    ////////////////
+
+    // Initializes theta to a random value between 0 & PI / 2
     double lowerBound = 0;
     double upperBound = M_PI / 2;
     std::uniform_real_distribution<double> unif(lowerBound, upperBound);
     std::default_random_engine re;
     double theta = unif(re);
 
-    //Initializes dtheta
+    // NOTE: Theta always initializes to 0.212807 without variation? Not sure if this is a real issue, but good to look into eventually.
+    // Possibly due to needing to include some library functions somewhere? Uncomment the following cout line to test.
+    //cout << "Theta: " << theta << endl;
+
+    // Initializes dTheta
     double dTheta = 2 * M_PI / (numPoints - 1);
 
-    //Loops j to numPoints
+    // Loops j to numPoints to store each point location to the Matrix of coordinates
     for (int j = 0; j < numPoints; ++j)
     {
         double r, dx, dy;
-        r = rand() % 60 + 20;
-        dy = r * cos(theta);
-        dy = r * sin(theta);
+        r = rand() % 61 + 20;
+
         dx = r * cos(theta);
-        dx = r * sin(theta);
+        dy = r * sin(theta);
+
         m_A(0, j) = m_centerCoordinate.x + dx;
         m_A(1, j) = m_centerCoordinate.y + dy;
         theta += dTheta;
@@ -53,27 +54,50 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     return;
 }
 
-// NOTE: Header specifies virtual prefix and override suffix; not sure if needed here?
-void Particle::draw(RenderTarget& target, RenderStates states) const
+// .:[Particle Draw Function]:.
+//          >> Called every frame by Engine loop
+void Particle::draw(RenderTarget& target, RenderStates states) const                    // Overrides Drawable class's draw() function for Polymorphism
 {
-    RectangleShape visualTest(Vector2f(10, 10));
-    visualTest.setPosition(m_centerCoordinate);
-    visualTest.setFillColor(Color::Blue);
-    target.draw(visualTest);
+    VertexArray lines(TriangleFan, m_numPoints + 1);                                    // VertexArray for a TriangleFan shape; includes additional point for its center
+    Vector2i center = target.mapCoordsToPixel(m_centerCoordinate, m_cartesianPlane);    // Particle's center mapped to screen space
+
+    // Saves center data to VertexArray's center pixel
+    lines[0].position = Vector2f(center.x, center.y);
+    lines[0].color = m_color1;
+
+    // Loops through every exterior point to set their respective positions and color
+    for (int j = 1; j <= m_numPoints; j++)
+    {
+        Vector2i pixelPos = target.mapCoordsToPixel(Vector2f(m_A(0, j - 1), m_A(1, j - 1)), m_cartesianPlane);
+        lines[j].position = Vector2f(pixelPos.x, pixelPos.y);
+        lines[j].color = m_color2;
+    }
+
+    // Draws the VertexArray, now that it's set up
+    target.draw(lines);
+
     return;
 }
 
-// Update
+// .:[Particle Physics Updates]:.
+//          >> Called every frame by Engine loop
 void Particle::update(float dt)
 {
+    ////////////////
+    // TO-DO: Add this function.
+    ////////////////
     return;
 }
 
+// .:[Checks if two Particles are "equal" as far as floating points are concerned]:.
+//          >> Used to assist in Unit Tests just below
 bool Particle::almostEqual(double a, double b, double eps)
 {
 	return fabs(a - b) < eps;
 }
 
+// .:[Unit Tests]:.
+//          >> Required for testing to make sure it all works right
 void Particle::unitTests()
 {
     int score = 0;
