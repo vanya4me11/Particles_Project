@@ -49,6 +49,10 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 // NOTE: Header specifies virtual prefix and override suffix; not sure if needed here?
 void Particle::draw(RenderTarget& target, RenderStates states) const
 {
+    RectangleShape visualTest(Vector2f(10, 10));
+    visualTest.setPosition(m_centerCoordinate);
+    visualTest.setFillColor(Color::Blue);
+    target.draw(visualTest);
     return;
 }
 

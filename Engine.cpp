@@ -48,6 +48,7 @@ void Engine::input()
 					// TO-DO: numPoints is random number in range [25:50] (second argument)
 					cout << "Random Integer " << i << ": " << (rand() % 25) + 25 << endl; // Temporary console output to test random integer generation
 					Particle newParticle(m_Window, (rand() % 25) + 25, sf::Mouse::getPosition(m_Window));
+					m_particles.push_back(newParticle);
 				}
 			}
 			// Right Click
@@ -91,4 +92,11 @@ void Engine::update(float dtAsSeconds)
 void Engine::draw()
 {
 	m_Window.clear();
+	//Create an iteratior
+	for (auto it = m_particles.begin(); it != m_particles.end(); )
+	{
+		it->draw(m_Window, RenderStates::Default);
+		it++;
+	}
+	m_Window.display();
 }
