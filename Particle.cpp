@@ -9,7 +9,14 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_radiansPerSec = ((float)rand() / (RAND_MAX)) * M_PI;
     m_cartesianPlane.setCenter(0, 0);
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);
-    m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
+
+    // TO-DO: m_centerCoordinate is temporarily set to a Vector2f directly from mouseClickPosition, but it should be mapped pixel to coordinates.
+        // Second commented-out declaration is correct, but in early testing it places pixels at strange coordinates.
+        // Unsure if this is a consequence of the early placeholder Particle draw function or if it's in the mapPixelToCoords function.
+        // Let's revisit this once the Particle draw function is more complete as it should be.
+    m_centerCoordinate = Vector2f(mouseClickPosition.x, mouseClickPosition.y);
+    //m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);
+ 
     //vvvv Initial Velocities. Feel free to change or make random.
     m_vx = 300;
     m_vy = 300;

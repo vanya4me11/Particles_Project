@@ -47,7 +47,7 @@ void Engine::input()
 				{
 					// TO-DO: numPoints is random number in range [25:50] (second argument)
 					cout << "Random Integer " << i << ": " << (rand() % 25) + 25 << endl; // Temporary console output to test random integer generation
-					Particle newParticle(m_Window, (rand() % 25) + 25, sf::Mouse::getPosition(m_Window));
+					Particle newParticle(m_Window, (rand() % 25) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y));
 					m_particles.push_back(newParticle);
 				}
 			}
