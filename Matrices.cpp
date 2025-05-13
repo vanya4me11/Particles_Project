@@ -141,22 +141,29 @@ namespace Matrices
         return os;
     }
 
-    // NOTE: Base-class Matrix constructor has placeholder values; look into what they should call instead?
+    // .:[Rotation Matrix Constructor]:.
     RotationMatrix::RotationMatrix(double theta) : Matrix(2, 2)
     {
-        return;
+        a.at(0).at(0) = cos(theta);
+        a.at(0).at(1) = -sin(theta);
+        a.at(1).at(0) = sin(theta);
+        a.at(1).at(1) = cos(theta);
     }
 
-    // NOTE: Base-class Matrix constructor has placeholder values; look into what they should call instead?
+    // .:[Scaling Matrix Constructor]:.
     ScalingMatrix::ScalingMatrix(double scale) : Matrix(2, 2)
     {
-        return;
+        a.at(0).at(0) = scale;
+        a.at(0).at(1) = 0;
+        a.at(1).at(0) = 0;
+        a.at(1).at(1) = scale;
     }
 
-    // NOTE: Base-class Matrix constructor has placeholder values; look into what they should call instead?
+    // .:[Translation Matrix Constructor]:.
     TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2, nCols)
     {
-        return;
+        for (int i = 0; i < nCols; i++) { a.at(0).at(i) = xShift; }     // Fills in first row
+        for (int i = 0; i < nCols; i++) { a.at(1).at(i) = yShift; }     // Fills in second row
     }
 
 }
