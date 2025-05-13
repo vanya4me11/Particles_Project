@@ -97,11 +97,11 @@ void Particle::update(float dt)
     //SCALE acts as a percentage to scale per frame. 0.999 is a good starting point but can be changed as wanted.
     scale(SCALE);
     float dx, dy;
-    dx = m_vx* dt;
+    dx = m_vx * dt;
 
     //Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
-    m_vy = G * dt;
-    dy = m_vy* dt;
+    m_vy = m_vy - (G * dt);
+    dy = m_vy * dt;
 
     //Calls translate to move particle as per values assigned in function.
     translate(dx, dy);
