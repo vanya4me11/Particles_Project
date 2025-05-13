@@ -17,7 +17,13 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
 
     // Initial Colors; currently greyscale, but can be made random colors.
     m_color1 = Color(150, 150, 150, 100);                                                   // Center color
-    m_color2 = Color(0, 0, 0, 50);                                                          // Outer color, blended to as a gradient
+
+    // Randomize colors for outer color
+    int r = rand() % 256;
+    int g = rand() % 256;
+    int b = (r + g < 40) ? rand() % 156 + 100 : rand() % 256;                               // Randomization has a minimum if R and B values are too low, keeps particle bright
+
+    m_color2 = Color(r, g, b, 150);                                                         // Outer color, blended to as a gradient
 
     ////////////////
     // Algorithm
