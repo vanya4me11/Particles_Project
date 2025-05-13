@@ -1,3 +1,8 @@
+/*
+David Haack
+Tyler Nordin
+Ivan Berniker
+*/
 #pragma once
 #pragma once
 #include <SFML/Graphics.hpp>
