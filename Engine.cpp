@@ -11,9 +11,11 @@ void Engine::run()
 {
 	Clock engineClock;			// Clock to keep track of delta time
 
-	////////////////
-	// TO-DO: Unit Testing with test Particle
-	////////////////
+	// Unit tests - Exact code, do not change!
+	cout << "Starting Particle unit tests..." << endl;
+	Particle p(m_Window, 4, { (int)m_Window.getSize().x / 2, (int)m_Window.getSize().y / 2 });
+	p.unitTests();
+	cout << "Unit tests complete.  Starting engine..." << endl;
 
 	// Endless repeating loop while window is open
 	while (m_Window.isOpen())
