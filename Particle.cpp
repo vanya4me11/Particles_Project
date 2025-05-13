@@ -13,7 +13,9 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
  
     // Initial Velocities; random range between [100:500]
     m_vx = rand() % 401 + 100;
+    if (rand() % 2 == 0) { m_vx *= -1; }                                                     // Random chance to flip x velocity
     m_vy = rand() % 401 + 100;
+    cout << "Initial velocity is " << m_vx << 'x' << m_vy << endl;
 
     // Initial Colors; currently greyscale, but can be made random colors.
     m_color1 = Color(150, 150, 150, 100);                                                   // Center color
