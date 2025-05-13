@@ -142,19 +142,19 @@ namespace Matrices
     }
 
     // NOTE: Base-class Matrix constructor has placeholder values; look into what they should call instead?
-    RotationMatrix::RotationMatrix(double theta) : Matrix(0, 0)
+    RotationMatrix::RotationMatrix(double theta) : Matrix(2, 2)
     {
         return;
     }
 
     // NOTE: Base-class Matrix constructor has placeholder values; look into what they should call instead?
-    ScalingMatrix::ScalingMatrix(double scale) : Matrix(0, 0)
+    ScalingMatrix::ScalingMatrix(double scale) : Matrix(2, 2)
     {
         return;
     }
 
     // NOTE: Base-class Matrix constructor has placeholder values; look into what they should call instead?
-    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(0, 0)
+    TranslationMatrix::TranslationMatrix(double xShift, double yShift, int nCols) : Matrix(2, nCols)
     {
         return;
     }
