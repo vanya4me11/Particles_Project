@@ -254,12 +254,15 @@ void Particle::unitTests()
     cout << "Score: " << score << " / 7" << endl;
 }
 
-///rotate Particle by theta radians counter-clockwise
- ///construct a RotationMatrix R, left mulitply it to m_A
+// .:[Particle Rotation]:.
+//          >> Rotate Particle by theta radians counter-clockwise
 void Particle::rotate(double theta)
 {
-    RotationMatrix R (theta);
-    m_A = R * m_A;
+    Vector2f temp = m_centerCoordinate;                             // Temporarily store coordinates
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);        // Move particle to the origin so it pivots correctly
+    RotationMatrix R(theta);                                       // Create Rotation Matrix
+    m_A = R * m_A;                                                  // Multiply Rotation Matrix by current Matrix to apply rotation
+    translate(temp.x, temp.y);                                      // Move particle back to where it's supposed to be
 }
 
 ///Scale the size of the Particle by factor c
