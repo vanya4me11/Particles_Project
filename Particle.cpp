@@ -89,9 +89,20 @@ void Particle::draw(RenderTarget& target, RenderStates states) const            
 //          >> Called every frame by Engine loop
 void Particle::update(float dt)
 {
-    ////////////////
-    // TO-DO: Add this function.
-    ////////////////
+    m_ttl = m_ttl - dt;
+    rotate(dt * m_radiansPerSec);
+
+    //SCALE acts as a percentage to scale per frame. 0.999 is a good starting point but can be changed as wanted.
+    scale(SCALE);
+    float dx, dy;
+    dx = m_vx* dt;
+
+    //Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
+    m_vy = G * dt;
+    dy = m_vy* dt;
+
+    //Calls translate to move particle as per values assigned in function.
+    translate(dx, dy);
     return;
 }
 
