@@ -269,8 +269,18 @@ void Particle::rotate(double theta)
 ///construct a ScalingMatrix S, left multiply it to m_A
 void Particle::scale(double c)
 {
+    //Stores m_centerCoordinate inside a Vector2f
+    Vector2f temp = m_centerCoordinate;
+
+    //Moves particle's center back to origin
+    translate(-m_centerCoordinate.x, -m_centerCoordinate.y);
+
+    //Creates a matrix, then moves the particle according to the contained values
     ScalingMatrix S(c);
     m_A = S * m_A;
+
+    //Moves the particle back to its original center
+    translate(temp.x, temp.y);
 }
 
 ///shift the Particle by (xShift, yShift) coordinates
