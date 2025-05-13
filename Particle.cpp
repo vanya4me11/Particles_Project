@@ -274,6 +274,13 @@ void Particle::scale(double c)
 ///construct a TranslationMatrix T, add it to m_A
 void Particle::translate(double xShift, double yShift)
 {
+    //Creates a Translation matrix T which will be used to move m_A
     TranslationMatrix T(xShift, yShift, m_A.getCols());
+
+    //Moves m_A by T
     m_A = T + m_A;
+
+    //Updates Center with post-translation coordinates
+    m_centerCoordinate.x += xShift;
+    m_centerCoordinate.y += yShift;
 }
