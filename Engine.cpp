@@ -66,7 +66,7 @@ void Engine::input()
 			}
 		}
 	}
-	
+	 
 	////////////////
 	// Left Click - Generates particles
 	//////////////// 
