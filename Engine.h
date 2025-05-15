@@ -20,6 +20,9 @@ private:
 	//vector for Particles
 	vector<Particle*> m_particles;
 
+	// initalize ptr for controllabe particle
+	Particle* m_controllableParticle = nullptr;
+
 	// Private functions for internal use only
 	void input();
 	void update(float dtAsSeconds);

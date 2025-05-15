@@ -64,7 +64,29 @@ class ConstantParticle : public Particle
 public:
     ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
     void update(float dt) override;
-    // Placeholder
 private:
-    // Placeholder
+    // Placeholder?
 };
+
+// .:[Wave Particle]:.
+//          >> Waves back and forth at varied speeds and width as it travels in a direction
+class WaveParticle : public ConstantParticle
+{
+public:
+    WaveParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float waveWidthX = 15000.0, float waveWidthY = 0.0, float waveSpeed = 10.0, 
+        Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
+    void update(float dt) override;
+private:
+    float w_waveSpeed;                  // Speed that the wave will accelerate and decelerate
+    float w_waveWidthX;                 // Width of the wave on both axes
+    float w_waveWidthY;
+    float waveVelocityX;                // Tracks current acceleration within the wave motion on both axes
+    float waveVelocityY;
+    float currentWaveWidthX;            // Tracks how far the wave has moved on its axis; compare to Width values to know when to change direction
+    float currentWaveWidthY;
+    float globalVelocityX;              // Global velocities to be added to wave velocity to make sure they stay vaguely on their intended direction
+    float globalVelocityY;
+    bool waveDirectionX;                // Booleans to track which direction the wave is currently accelerating in
+    bool waveDirectionY;
+};
+
