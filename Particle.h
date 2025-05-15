@@ -26,6 +26,7 @@ public:
     void setVelocity(float set_x, float set_y) { m_vx = set_x; m_vy = set_y; }
     void setScaleMultiplier(float set_scale) { m_scaleMultiplier = set_scale; }
     void setTTL(float set_ttl) { m_ttl = set_ttl; }
+    float getScaleMultiplier() { return m_scaleMultiplier; }
 
     //Functions for unit testing
     bool almostEqual(double a, double b, double eps = 0.0001);
@@ -64,8 +65,6 @@ class ConstantParticle : public Particle
 public:
     ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
     void update(float dt) override;
-private:
-    // Placeholder?
 };
 
 // .:[Wave Particle]:.
@@ -88,5 +87,16 @@ private:
     float globalVelocityY;
     bool waveDirectionX;                // Booleans to track which direction the wave is currently accelerating in
     bool waveDirectionY;
+};
+
+// .:[Grow Particle]:.
+//          >> Gradually increases in size
+class GrowParticle : public Particle
+{
+public:
+    GrowParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float growScale = 1.002505, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
+    void update(float dt) override;
+private:
+    float growAmount;
 };
 

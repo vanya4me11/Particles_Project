@@ -5,7 +5,7 @@ Engine::Engine()
 {
 	m_Window.create(VideoMode(1920, 1080), "Particles Project", Style::Default);			// Initializes RenderWindow
 	particle_ID = 0; // >> Initializes the ID to 0
-	particle_Types = 1; // >> [[[IMPORTANT]]] INITIALIZE THIS VALUE WITH THE AMOUNT OF DIFFERENT PARTICLE TYPES MINUS ONE.
+	particle_Types = 3; // >> [[[IMPORTANT]]] INITIALIZE THIS VALUE WITH THE AMOUNT OF DIFFERENT PARTICLE TYPES MINUS ONE.
 }
 
 // .:[Engine Initialization]:.
@@ -90,6 +90,24 @@ void Engine::input()
 				m_particles.push_back(newParticle);
 			}
 		}
+		else if (particle_ID == 2)
+		{
+			// Loop to create 2 particles
+			for (int i = 0; i < 2; i++)
+			{
+				WaveParticle* newParticle = new WaveParticle(m_Window, (rand() % 26) + 25, Vector2i(Mouse::getPosition()));
+				m_particles.push_back(newParticle);
+			}
+		}
+		else if (particle_ID == 3)
+		{
+			// Loop to create 2 particles
+			for (int i = 0; i < 2; i++)
+			{
+				GrowParticle* newParticle = new GrowParticle(m_Window, (rand() % 26) + 25, Vector2i(Mouse::getPosition()));
+				m_particles.push_back(newParticle);
+			}
+		}
 	}
 	// Keyboard Key events
 
@@ -114,7 +132,7 @@ void Engine::input()
 	}
 
 	if (jWasPressed) {
-		for (int d_x = )
+		//for (int d_x = )
 		m_controllableParticle = new Particle(m_Window, 30, Vector2i(m_Window.getSize().x / 2, m_Window.getSize().y / 2));
 		m_particles.push_back(m_controllableParticle);
 		jWasPressed = true;

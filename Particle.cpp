@@ -459,3 +459,49 @@ void WaveParticle::update(float dt)
     setVelocity(globalVelocityX + waveVelocityX, globalVelocityY + waveVelocityY);          // Adds wave velocity to current velocity
     transformUpdate(dt);
 }
+
+///////////////////////////////////////////////
+// Grow Particle
+//          -Grows gradually, affected by gravity
+///////////////////////////////////////////////
+
+GrowParticle::GrowParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float growScale, Color particleColor, float startingX, float startingY)
+    : Particle(target, numPoints, mouseClickPosition, 0.5, Color::Yellow)
+{
+    // Initial Velocities - Default is no velocity, which prompts it to pick a random one
+    if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
+    {
+        // Initial Velocities; random range between [100:500]
+        float randX;
+        float randY;
+        randX = rand() % 301;
+        if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
+        randY = rand() % 401 + 100;
+        setVelocity(randX, randY);
+    }
+    else
+    {
+        setVelocity(startingX, startingY);
+    }
+    setScaleMultiplier(growScale);    // Sets scale multiplier
+    growAmount = 0.0;
+
+    return;
+}
+
+void GrowParticle::update(float dt)
+{
+    cout << growAmount << endl;
+    if (growAmount < 10)
+    {
+        growAmount += getScaleMultiplier() - 1.0;
+        if (growAmount > 10)
+        {
+            setScaleMultiplier(0.1);
+        }
+    }
+
+    // Assigns vertical velocity of the particle according to Gravity constant
+    setVelocity(getVelocity().x, getVelocity().y - ((G / 2) * dt));
+    transformUpdate(dt);
+}
