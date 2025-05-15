@@ -126,7 +126,17 @@ void Particle::transformUpdate(float dt)
 {
     m_ttl = m_ttl - dt;                         // Decreases time to live
     rotate(dt * m_radiansPerSec);               // Rotation
-    scale(m_scaleMultiplier);                   // Scale
+    if (!almostEqual(m_scaleMultiplier, 1.0))
+    {
+        if (m_scaleMultiplier > 1.0)
+        {
+            scale(m_scaleMultiplier * (1 + dt));
+        }
+        else
+        {
+            scale(m_scaleMultiplier * (1 - dt));
+        }
+    }
     // Assigns horizontal and vertical velocity to account for delta time
     float dx, dy;
     dx = m_vx * dt;
@@ -465,7 +475,7 @@ void WaveParticle::update(float dt)
 //          -Grows gradually, affected by gravity
 ///////////////////////////////////////////////
 
-GrowParticle::GrowParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float growScale, Color particleColor, float startingX, float startingY)
+GrowParticle::GrowParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float growScale, float maxGrow, Color particleColor, float startingX, float startingY)
     : Particle(target, numPoints, mouseClickPosition, 0.5, Color::Yellow)
 {
     // Initial Velocities - Default is no velocity, which prompts it to pick a random one
@@ -485,21 +495,25 @@ GrowParticle::GrowParticle(RenderTarget& target, int numPoints, Vector2i mouseCl
     }
     setScaleMultiplier(growScale);    // Sets scale multiplier
     growAmount = 0.0;
+    g_maxGrow = maxGrow;
 
     return;
 }
 
 void GrowParticle::update(float dt)
 {
-    cout << growAmount << endl;
-    if (growAmount < 10)
+    //cout << growAmount << endl;
+    //growAmount += getScaleMultiplier() - 1.0;
+
+    if (growAmount < 0.3)
     {
         growAmount += getScaleMultiplier() - 1.0;
-        if (growAmount > 10)
+        if (growAmount > 0.3)
         {
-            setScaleMultiplier(0.1);
+            setScaleMultiplier(1.0);
         }
     }
+
 
     // Assigns vertical velocity of the particle according to Gravity constant
     setVelocity(getVelocity().x, getVelocity().y - ((G / 2) * dt));
