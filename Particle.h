@@ -20,11 +20,11 @@ public:
 	Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float particleSize = 1.0, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
 	virtual void draw(RenderTarget& target, RenderStates states) const override;
     virtual void update(float dt);
-    void transform(float scaleMultiplier, float dt);
     float getTTL() { return m_ttl; }
     Vector2f getVelocity() { return Vector2f(m_vx, m_vy); }
-    void SetVelocity(float set_x, float set_y);
-    void SetTTL(float set_ttl);
+    void setVelocity(float set_x, float set_y) { m_vx = set_x; m_vy = set_y; }
+    void setScaleMultiplier(float set_scale) { m_scaleMultiplier = set_scale; }
+    void setTTL(float set_ttl) { m_ttl = set_ttl; }
 
     //Functions for unit testing
     bool almostEqual(double a, double b, double eps = 0.0001);
@@ -37,6 +37,7 @@ private:
     float m_radiansPerSec;
     float m_vx;
     float m_vy;
+    float m_scaleMultiplier;
     View m_cartesianPlane;
     Color m_color1;
     Color m_color2;

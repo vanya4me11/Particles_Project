@@ -15,6 +15,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_cartesianPlane.setCenter(0, 0);                                                       // Sets Cartesian Plane center to 0, 0
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);              // Sets size of Cartesian Plane according to Window size
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);     // Sets Center Coordinate to mouse click position, mapped to Cartesian Plane
+    m_scaleMultiplier = SCALE;
  
     // Initial Velocities - Default is no velocity, which prompts it to pick a random one
     if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
@@ -114,40 +115,20 @@ void Particle::update(float dt)
 {
     m_ttl = m_ttl - dt;                         // Decreases time to live
 
-    // Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
-    m_vy = m_vy - (G * dt);
-    
-    // Apply transformations
-    transform(SCALE, dt);
-    return;
-}
-
-// .:[Particle Transform calls]:.
-//          >> Split like this so derived classes can access these functions
-void Particle::transform(float scaleMultiplier, float dt)
-{
     rotate(dt * m_radiansPerSec);               // Rotation
-    scale(scaleMultiplier);                     // Scale
+    scale(m_scaleMultiplier);                   // Scale
 
     // Assigns horizontal velocity to account for delta time
     float dx, dy;
     dx = m_vx * dt;
+
+    // Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
+    m_vy = m_vy - (G * dt);
     dy = m_vy * dt;
+    
+    translate(dx, dy);                          // Movement
 
-    translate(dx, dy);                      // Movement
-}
-
-// .:[Set Particle Velocity]:.
-void Particle::SetVelocity(float set_x, float set_y)
-{
-    m_vx = set_x;
-    m_vy = set_y;
-}
-
-// .:[Set Particle Time To Live]:.
-void Particle::SetTTL(float set_ttl)
-{
-    m_ttl = set_ttl;
+    return;
 }
 
 // .:[Checks if two Particles are "equal" as far as floating points are concerned]:.
@@ -358,11 +339,11 @@ ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i
         float randX = rand() % 501;
         if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
         float randY = (rand() % 51 + 10) * -1;
-        SetVelocity(randX, randY);
+        setVelocity(randX, randY);
     }
     else
     {
-        SetVelocity(startingX, startingY);
+        setVelocity(startingX, startingY);
     }
     return;
 }
@@ -370,6 +351,5 @@ ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i
 void ConstantParticle::update(float dt)
 {
     cout << "Constant Update" << endl;
-    SetTTL(getTTL() - dt);
-    transform(1.0, dt);
+    setTTL(getTTL() - dt);
 }
