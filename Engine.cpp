@@ -57,11 +57,16 @@ void Engine::input()
 				}
 			}
 			////////////////
-			// Right Click - Currently unused; place registered in case of future additions
+			// Right Click - Temporarily used to construct green Constant Particles, for the sake of early testing
 			////////////////
 			else if (event.mouseButton.button == sf::Mouse::Right)
 			{
-				cout << "Right click" << endl;
+				// Loop to create 5 particles
+				for (int i = 0; i < 5; i++)
+				{
+					ConstantParticle newParticle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y), Color::Green);
+					m_particles.push_back(newParticle);
+				}
 			}
 		}
 	}

@@ -1,7 +1,12 @@
 #include "Particle.h"
 
+///////////////////////////////////////////////
+// Normal Particle
+//          -Falls with gravity and shrinks
+///////////////////////////////////////////////
+
 // .:[Constructor]:.
-Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition)
+Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor, float startingX, float startingY)
     :m_A(2, numPoints) // Constructs a Matrix of 2 rows and numPoints columns to store a set of coordinates in
 {
     m_ttl = TTL;                                                                            // Particle life duration, retrieves via a constant
@@ -11,21 +16,37 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     m_cartesianPlane.setSize(target.getSize().x, (-1.0) * target.getSize().y);              // Sets size of Cartesian Plane according to Window size
     m_centerCoordinate = target.mapPixelToCoords(mouseClickPosition, m_cartesianPlane);     // Sets Center Coordinate to mouse click position, mapped to Cartesian Plane
  
-    // Initial Velocities; random range between [100:500]
-    m_vx = rand() % 401 + 100;
-    if (rand() % 2 == 0) { m_vx *= -1; }                                                     // Random chance to flip x velocity
-    m_vy = rand() % 401 + 100;
-    cout << "Initial velocity is " << m_vx << 'x' << m_vy << endl;
+    // Initial Velocities - Default is no velocity, which prompts it to pick a random one
+    if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
+    {
+        // Initial Velocities; random range between [100:500]
+        m_vx = rand() % 401 + 100;
+        if (rand() % 2 == 0) { m_vx *= -1; }                                                     // Random chance to flip x velocity
+        m_vy = rand() % 401 + 100;
+    }
+    else
+    {
+        m_vx = startingX;
+        m_vy = startingY;
+    }
 
     // Initial Colors; currently greyscale, but can be made random colors.
     m_color1 = Color(150, 150, 150, 100);                                                   // Center color
 
-    // Randomize colors for outer color
-    int r = rand() % 256;
-    int g = rand() % 256;
-    int b = (r + g < 40) ? rand() % 156 + 100 : rand() % 256;                               // Randomization has a minimum if R and B values are too low, keeps particle bright
+    // Outer color - Black is used as default particle color, which prompts it to pick a random one
+    if (particleColor == Color::Black)
+    {
+        // Randomize colors for outer color
+        int r = rand() % 256;
+        int g = rand() % 256;
+        int b = (r + g < 40) ? rand() % 156 + 100 : rand() % 256;                               // Randomization has a minimum if R and B values are too low, keeps particle bright
 
-    m_color2 = Color(r, g, b, 150);                                                         // Outer color, blended to as a gradient
+        m_color2 = Color(r, g, b, 150);                                                         // Outer color, blended to as a gradient
+    }
+    else
+    {
+        m_color2 = particleColor;
+    }
 
     ////////////////
     // Algorithm
@@ -106,6 +127,19 @@ void Particle::update(float dt)
     //Calls translate to move particle as per values assigned in function.
     translate(dx, dy);
     return;
+}
+
+// .:[Set Particle Velocity]:.
+void Particle::SetVelocity(float set_x, float set_y)
+{
+    m_vx = set_x;
+    m_vy = set_y;
+}
+
+// .:[Set Particle Time To Live]:.
+void Particle::SetTTL(float set_ttl)
+{
+    m_ttl = set_ttl;
 }
 
 // .:[Checks if two Particles are "equal" as far as floating points are concerned]:.
@@ -298,4 +332,29 @@ void Particle::translate(double xShift, double yShift)
     //Updates Center with post-translation coordinates
     m_centerCoordinate.x += xShift;
     m_centerCoordinate.y += yShift;
+}
+
+
+///////////////////////////////////////////////
+// Constant Particle
+//          -Unaffected by gravity, remains a constant size
+///////////////////////////////////////////////
+
+ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor, float startingX, float startingY)
+    : Particle(target, numPoints, mouseClickPosition, Color::Green)
+{
+    // Initial Velocities - Default is no velocity, which prompts it to pick a random one
+    if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
+    {
+        // Initial Velocities; random range between [100:500]
+        float randX = rand() % 401 + 100;
+        if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
+        float randY = (rand() % 401 + 100) * -1;
+        SetVelocity(startingX, startingY);
+    }
+    else
+    {
+        SetVelocity(startingX, startingY);
+    }
+    return;
 }

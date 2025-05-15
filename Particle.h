@@ -3,19 +3,26 @@
 #include <SFML/Graphics.hpp>
 
 #define M_PI 3.1415926535897932384626433
-const float G = 1000;      //Gravity
-const float TTL = 5.0;  //Time To Live
-const float SCALE = 0.999;
+const float G = 1000;                               // Gravity
+const float TTL = 5.0;                              // Time To Live
+const float SCALE = 0.999;                          // Scale
+
+enum ParticleType {RANDOM, NORMAL, CONSTANT};       // Enumerator to assist with spawning
 
 using namespace Matrices;
 using namespace sf;
+
+// .:[Normal Particle]:.
+//          >> Falls with gravity, decreases steadily in size
 class Particle : public Drawable
 {
 public:
-	Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition);
+	Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
 	virtual void draw(RenderTarget& target, RenderStates states) const override;
     void update(float dt);
     float getTTL() { return m_ttl; }
+    void SetVelocity(float set_x, float set_y);
+    void SetTTL(float set_ttl);
 
     //Functions for unit testing
     bool almostEqual(double a, double b, double eps = 0.0001);
@@ -44,4 +51,15 @@ private:
     ///shift the Particle by (xShift, yShift) coordinates
     ///construct a TranslationMatrix T, add it to m_A
     void translate(double xShift, double yShift);
+};
+
+// .:[Constant Particle]:.
+//          >> Not affected by gravity, does not decrease in size
+class ConstantParticle : public Particle
+{
+public:
+    ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
+    // Placeholder
+private:
+    // Placeholder
 };
