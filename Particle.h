@@ -17,10 +17,12 @@ using namespace sf;
 class Particle : public Drawable
 {
 public:
-	Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
+	Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float particleSize = 1.0, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
 	virtual void draw(RenderTarget& target, RenderStates states) const override;
-    void update(float dt);
+    virtual void update(float dt);
+    void transform(float scaleMultiplier, float dt);
     float getTTL() { return m_ttl; }
+    Vector2f getVelocity() { return Vector2f(m_vx, m_vy); }
     void SetVelocity(float set_x, float set_y);
     void SetTTL(float set_ttl);
 
@@ -59,6 +61,7 @@ class ConstantParticle : public Particle
 {
 public:
     ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
+    void update(float dt) override;
     // Placeholder
 private:
     // Placeholder

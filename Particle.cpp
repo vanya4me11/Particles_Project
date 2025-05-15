@@ -6,7 +6,7 @@
 ///////////////////////////////////////////////
 
 // .:[Constructor]:.
-Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor, float startingX, float startingY)
+Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float particleSize, Color particleColor, float startingX, float startingY)
     :m_A(2, numPoints) // Constructs a Matrix of 2 rows and numPoints columns to store a set of coordinates in
 {
     m_ttl = TTL;                                                                            // Particle life duration, retrieves via a constant
@@ -70,7 +70,7 @@ Particle::Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosit
     for (int j = 0; j < numPoints; ++j)
     {
         double r, dx, dy;
-        r = rand() % 61 + 20;
+        r = rand() % int(61 * particleSize) + (20 * particleSize);
 
         dx = r * cos(theta);
         dy = r * sin(theta);
@@ -112,21 +112,29 @@ void Particle::draw(RenderTarget& target, RenderStates states) const            
 //          >> Called every frame by Engine loop
 void Particle::update(float dt)
 {
-    m_ttl = m_ttl - dt;
-    rotate(dt * m_radiansPerSec);
+    m_ttl = m_ttl - dt;                         // Decreases time to live
 
-    //SCALE acts as a percentage to scale per frame. 0.999 is a good starting point but can be changed as wanted.
-    scale(SCALE);
+    // Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
+    m_vy = m_vy - (G * dt);
+    
+    // Apply transformations
+    transform(SCALE, dt);
+    return;
+}
+
+// .:[Particle Transform calls]:.
+//          >> Split like this so derived classes can access these functions
+void Particle::transform(float scaleMultiplier, float dt)
+{
+    rotate(dt * m_radiansPerSec);               // Rotation
+    scale(scaleMultiplier);                     // Scale
+
+    // Assigns horizontal velocity to account for delta time
     float dx, dy;
     dx = m_vx * dt;
-
-    //Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
-    m_vy = m_vy - (G * dt);
     dy = m_vy * dt;
 
-    //Calls translate to move particle as per values assigned in function.
-    translate(dx, dy);
-    return;
+    translate(dx, dy);                      // Movement
 }
 
 // .:[Set Particle Velocity]:.
@@ -341,20 +349,27 @@ void Particle::translate(double xShift, double yShift)
 ///////////////////////////////////////////////
 
 ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor, float startingX, float startingY)
-    : Particle(target, numPoints, mouseClickPosition, Color::Green)
+    : Particle(target, numPoints, mouseClickPosition, 0.33, Color::Green)
 {
     // Initial Velocities - Default is no velocity, which prompts it to pick a random one
     if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
     {
         // Initial Velocities; random range between [100:500]
-        float randX = rand() % 401 + 100;
+        float randX = rand() % 501;
         if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
-        float randY = (rand() % 401 + 100) * -1;
-        SetVelocity(startingX, startingY);
+        float randY = (rand() % 51 + 10) * -1;
+        SetVelocity(randX, randY);
     }
     else
     {
         SetVelocity(startingX, startingY);
     }
     return;
+}
+
+void ConstantParticle::update(float dt)
+{
+    cout << "Constant Update" << endl;
+    SetTTL(getTTL() - dt);
+    transform(1.0, dt);
 }
