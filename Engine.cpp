@@ -34,7 +34,7 @@ void Engine::input()
 {
 	Event event;
 	while (m_Window.pollEvent(event))
-	{
+	{		
 		////////////////
 		// Window Closed
 		////////////////
@@ -47,38 +47,14 @@ void Engine::input()
 		if (event.type == sf::Event::MouseButtonPressed)
 		{
 			////////////////
-			// Left Click - Generates particles
-			////////////////
-			if (event.mouseButton.button == sf::Mouse::Left)
-			{
-				if (particle_ID == 0)
-				{
-					// Loop to create 5 particles
-					for (int i = 0; i < 5; i++)
-					{
-						Particle* newParticle = new Particle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y));
-						m_particles.push_back(newParticle);
-					}
-				}
-				else if (particle_ID == 1) 
-				{
-					// Loop to create 5 particles
-					for (int i = 0; i < 5; i++)
-					{
-						ConstantParticle* newParticle = new ConstantParticle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y), Color::Green);
-						m_particles.push_back(newParticle);
-					}
-				}	
-			}
-			////////////////
 			// Right Click - Changes what particles left-click will generate
 			////////////////
-			 else if (event.mouseButton.button == sf::Mouse::Right)
+			if (event.mouseButton.button == sf::Mouse::Right)
 			{
 				// >> Increments the current particle ID by one.
 				++particle_ID;
 				// >> If it becomes more than the amount of particle types there are, it resets to 0.
-				if (particle_ID > particle_Types) 
+				if (particle_ID > particle_Types)
 				{
 					particle_ID = 0;
 					cout << "DEBUG: PARTICLE ID RESET TO 0" << endl;
@@ -87,6 +63,31 @@ void Engine::input()
 				{
 					cout << "DEBUG: PARTICLE ID INCRIMENTED TO: " << particle_ID << endl;
 				}
+			}
+		}
+	}
+	
+	////////////////
+	// Left Click - Generates particles
+	//////////////// 
+	if (sf::Mouse::isButtonPressed(sf::Mouse::Left))
+	{	
+		if (particle_ID == 0)
+		{
+			// Loop to create 5 particles
+			for (int i = 0; i < 5; i++)
+			{
+				Particle* newParticle = new Particle(m_Window, (rand() % 26) + 25, Vector2i(Mouse::getPosition()));
+				m_particles.push_back(newParticle);
+			}
+		}
+		else if (particle_ID == 1)
+		{
+			// Loop to create 5 particles
+			for (int i = 0; i < 5; i++)
+			{
+				ConstantParticle* newParticle = new ConstantParticle(m_Window, (rand() % 26) + 25, Vector2i(Mouse::getPosition()), Color::Green);
+				m_particles.push_back(newParticle);
 			}
 		}
 	}
