@@ -339,20 +339,21 @@ ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i
     if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
     {
         // Initial Velocities; random range between [100:500]
-        float randX = rand() % 301;
+        float randX = rand() % 201;
         if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
-        float randY = (rand() % 51 + 10) * -1;
+        float randY = (rand() % 101 + 50) * -1;
         setVelocity(randX, randY);
     }
     else
     {
         setVelocity(startingX, startingY);
     }
+    setScaleMultiplier(1.0);    // Sets scale multiplier to 100% so particles do not shrink
+    //setTTL(TTL * getVelocity().y);
     return;
 }
 
 void ConstantParticle::update(float dt)
 {
-    cout << "Constant Update" << endl;
-    setTTL(getTTL() - dt);
+    transformUpdate(dt);
 }

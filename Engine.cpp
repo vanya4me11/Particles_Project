@@ -56,7 +56,7 @@ void Engine::input()
 					// Loop to create 5 particles
 					for (int i = 0; i < 5; i++)
 					{
-						Particle newParticle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y));
+						Particle* newParticle = new Particle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y));
 						m_particles.push_back(newParticle);
 					}
 				}
@@ -65,7 +65,7 @@ void Engine::input()
 					// Loop to create 5 particles
 					for (int i = 0; i < 5; i++)
 					{
-						ConstantParticle newParticle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y), Color::Green);
+						ConstantParticle* newParticle = new ConstantParticle(m_Window, (rand() % 26) + 25, Vector2i(event.mouseButton.x, event.mouseButton.y), Color::Green);
 						m_particles.push_back(newParticle);
 					}
 				}	
@@ -102,25 +102,24 @@ void Engine::input()
 }
 
 // .:[Engine Logic / Physics Updates]:.
-// Update: loop through m_particles with an iterator 
- //			check TTL for each Particle in the vector ; erase if expired
 void Engine::update(float dtAsSeconds)
 {
-		//Create an iteratior
-	for (auto it = m_particles.begin(); it != m_particles.end(); )
+	// Create an iterator
+	for (vector<Particle*>::iterator it = m_particles.begin(); it != m_particles.end(); )
 	{
-		//Check TTL
-		if (it->getTTL() > 0.0f)
+		Particle* currentPointer = *it;
+		// Check TTL
+		if (currentPointer->getTTL() > 0.0f)
 		{
-			//Call update
-			it->update(dtAsSeconds);
+			// Call update
+			currentPointer->update(dtAsSeconds);
 
-			//Increment loop
+			// Increment loop
 			++it;
 		}
 		else
 		{
-			//else Remove particle
+			// Remove particle if TTL expired
 			it = m_particles.erase(it);
 		}
 	}
@@ -131,9 +130,10 @@ void Engine::draw()
 {
 	m_Window.clear();
 	// Loop through all particles with an iterator and call their draw functions
-	for (auto it = m_particles.begin(); it != m_particles.end(); )
+	for (vector<Particle*>::iterator it = m_particles.begin(); it != m_particles.end(); )
 	{
-		it->draw(m_Window, RenderStates::Default);
+		Particle* currentPointer = *it;
+		currentPointer->draw(m_Window, RenderStates::Default);
 		it++;
 	}
 	// Display the window
