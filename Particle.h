@@ -20,6 +20,7 @@ public:
 	Particle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float particleSize = 1.0, Color particleColor = Color::Black, float startingX = 0.0, float startingY = 0.0);
 	virtual void draw(RenderTarget& target, RenderStates states) const override;
     virtual void update(float dt);
+    void transformUpdate(float dt);
     float getTTL() { return m_ttl; }
     Vector2f getVelocity() { return Vector2f(m_vx, m_vy); }
     void setVelocity(float set_x, float set_y) { m_vx = set_x; m_vy = set_y; }

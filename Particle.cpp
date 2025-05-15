@@ -113,22 +113,25 @@ void Particle::draw(RenderTarget& target, RenderStates states) const            
 //          >> Called every frame by Engine loop
 void Particle::update(float dt)
 {
-    m_ttl = m_ttl - dt;                         // Decreases time to live
+    // Assigns vertical velocity of the particle according to Gravity constant
+    m_vy = m_vy - (G * dt);
+    // Goes ahead with transform update
+    transformUpdate(dt);
+    return;
+}
 
+// .:[Particle Transform Update]:.
+//          >> Separated so derived particles can have different behaviors before updating
+void Particle::transformUpdate(float dt)
+{
+    m_ttl = m_ttl - dt;                         // Decreases time to live
     rotate(dt * m_radiansPerSec);               // Rotation
     scale(m_scaleMultiplier);                   // Scale
-
-    // Assigns horizontal velocity to account for delta time
+    // Assigns horizontal and vertical velocity to account for delta time
     float dx, dy;
     dx = m_vx * dt;
-
-    // Assigns vertical velocity of the particle. CONST G for gravity can be changed to modify.
-    m_vy = m_vy - (G * dt);
     dy = m_vy * dt;
-    
     translate(dx, dy);                          // Movement
-
-    return;
 }
 
 // .:[Checks if two Particles are "equal" as far as floating points are concerned]:.
@@ -336,7 +339,7 @@ ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i
     if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
     {
         // Initial Velocities; random range between [100:500]
-        float randX = rand() % 501;
+        float randX = rand() % 301;
         if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
         float randY = (rand() % 51 + 10) * -1;
         setVelocity(randX, randY);
