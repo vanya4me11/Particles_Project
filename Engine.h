@@ -24,6 +24,10 @@ private:
 	void input();
 	void update(float dtAsSeconds);
 	void draw();
+	
+	// >> Values for particle switching
+	int particle_ID; // >>  Tracks the current particle to generate
+	int particle_Types; // >> How many different particle types there are, 
 
 public:
 	// The Engine constructor
