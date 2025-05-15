@@ -3,7 +3,7 @@
 // .:[Constructor]:.
 Engine::Engine()
 {
-	m_Window.create(VideoMode(650, 450), "Particles Project", Style::Default);			// Initializes RenderWindow
+	m_Window.create(VideoMode(1920, 1080), "Particles Project", Style::Default);			// Initializes RenderWindow
 	particle_ID = 0; // >> Initializes the ID to 0
 	particle_Types = 1; // >> [[[IMPORTANT]]] INITIALIZE THIS VALUE WITH THE AMOUNT OF DIFFERENT PARTICLE TYPES MINUS ONE.
 }
