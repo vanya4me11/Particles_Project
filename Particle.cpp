@@ -333,7 +333,7 @@ void Particle::translate(double xShift, double yShift)
 ///////////////////////////////////////////////
 
 ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, Color particleColor, float startingX, float startingY)
-    : Particle(target, numPoints, mouseClickPosition, 0.33, Color::Green)
+    : Particle(target, numPoints, mouseClickPosition, 0.33, particleColor)
 {
     // Initial Velocities - Default is no velocity, which prompts it to pick a random one
     if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
@@ -355,5 +355,107 @@ ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i
 
 void ConstantParticle::update(float dt)
 {
+    transformUpdate(dt);
+}
+
+///////////////////////////////////////////////
+// Wave Particle
+//          -Waves back and forth at varied speeds and width as it travels in a direction
+///////////////////////////////////////////////
+
+// .:[Wave Particle Constructor]:.
+WaveParticle::WaveParticle(RenderTarget& target, int numPoints, Vector2i mouseClickPosition, float waveWidthX, float waveWidthY, float waveSpeed,
+    Color particleColor, float startingX, float startingY)
+    : ConstantParticle(target, numPoints, mouseClickPosition, Color::Cyan)
+{
+    // Initial Velocities - Default is no velocity, which prompts it to pick a random one
+    if (almostEqual(startingX, 0.0) && almostEqual(startingY, 0.0))
+    {
+        // Initial Velocities; random range between [0:100 / 100:200]
+        float randX = rand() % 101;
+        if (rand() % 2 == 0) { randX *= -1; }                                                     // Random chance to flip x velocity
+        float randY = (rand() % 201 + 100) * -1;
+        setVelocity(randX, randY);
+    }
+    else
+    {
+        setVelocity(startingX, startingY);
+    }
+    setScaleMultiplier(1.0);    // Sets scale multiplier to 100% so particles do not shrink
+    //setTTL(TTL * getVelocity().y);
+
+    // Sets global velocities from initial setting
+    globalVelocityX = getVelocity().x;
+    globalVelocityY = getVelocity().y;
+
+    // Initialize wave variables according to parameters, and random wave directions
+    w_waveSpeed = waveSpeed;
+    w_waveWidthX = waveWidthX;
+    w_waveWidthY = waveWidthY;
+    waveVelocityX = 0.0;
+    waveVelocityY = 0.0;
+    currentWaveWidthX = 0.0;
+    currentWaveWidthY = 0.0;
+    waveDirectionX = rand() % 2;
+    waveDirectionY = rand() % 2;
+    return;
+}
+
+// .:[Wave Particle Update]:.
+void WaveParticle::update(float dt)
+{
+    Vector2f currentVelocity = getVelocity();           // Store current velocity to be accessed more easily
+
+    // Only check if there is any X-axis wave
+    if (!almostEqual(w_waveWidthX, 0.0))
+    {
+        // If moving right
+        if (waveDirectionX)
+        {
+            waveVelocityX += w_waveSpeed;               // Accelerate velocity
+            currentWaveWidthX += waveVelocityX;         // Update tracker value
+            if (currentWaveWidthX > w_waveWidthX)       // Check if the wave has gone past its set width
+            {
+                waveDirectionX = !waveDirectionX;       // Reverse direction
+            }
+        }
+        // If moving left
+        else
+        {
+            waveVelocityX -= w_waveSpeed;               // See above code for how this and the Y-axis equivalents work. Maybe some way to condense this.
+            currentWaveWidthX += waveVelocityX;
+            if (currentWaveWidthX < -w_waveWidthX)
+            {
+                waveDirectionX = !waveDirectionX;
+            }
+        }
+    }
+
+    // Only check if there is any Y-axis wave
+    if (!almostEqual(w_waveWidthY, 0.0))
+    {
+        // If moving up
+        if (waveDirectionY)
+        {
+            waveVelocityY += w_waveSpeed;
+            currentWaveWidthY += waveVelocityY;
+            if (currentWaveWidthY > w_waveWidthY)
+            {
+                waveDirectionY = !waveDirectionY;
+            }
+        }
+        // If moving left
+        else
+        {
+            waveVelocityY -= w_waveSpeed;
+            currentWaveWidthY += waveVelocityY;
+            if (currentWaveWidthY < -w_waveWidthY)
+            {
+                waveDirectionY = !waveDirectionY;
+            }
+        }
+    }
+
+    setVelocity(globalVelocityX + waveVelocityX, globalVelocityY + waveVelocityY);          // Adds wave velocity to current velocity
     transformUpdate(dt);
 }
