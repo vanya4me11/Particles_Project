@@ -99,6 +99,26 @@ void Engine::input()
 	{
 		m_Window.close();
 	}
+
+	bool jWasPressed = false;
+	
+	if (Keyboard::isKeyPressed(Keyboard::J)) {
+		if (!jWasPressed) {
+		
+			jWasPressed = true;
+		}
+	}
+	else {
+		jWasPressed = false;
+	}
+
+	if (jWasPressed) {
+		for (int d_x = )
+		m_controllableParticle = new Particle(m_Window, 30, Vector2i(m_Window.getSize().x / 2, m_Window.getSize().y / 2));
+		m_particles.push_back(m_controllableParticle);
+		jWasPressed = true;
+	}
+
 }
 
 // .:[Engine Logic / Physics Updates]:.
