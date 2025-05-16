@@ -359,7 +359,7 @@ ConstantParticle::ConstantParticle(RenderTarget& target, int numPoints, Vector2i
         setVelocity(startingX, startingY);
     }
     setScaleMultiplier(1.0);    // Sets scale multiplier to 100% so particles do not shrink
-    //setTTL(TTL * getVelocity().y);
+    setTTL(10.0);
     return;
 }
 
