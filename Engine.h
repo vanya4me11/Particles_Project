@@ -30,7 +30,11 @@ private:
 	
 	// >> Values for particle switching
 	int particle_ID; // >>  Tracks the current particle to generate
-	int particle_Types; // >> How many different particle types there are, 
+	int particle_Types; // >> How many different particle types there are,
+
+	Font berlinSans;
+	vector<Text*> particleUI;
+	Text testText;
 
 public:
 	// The Engine constructor

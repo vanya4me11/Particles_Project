@@ -6,6 +6,30 @@ Engine::Engine()
 	m_Window.create(VideoMode(1920, 1080), "Particles Project", Style::Default);			// Initializes RenderWindow
 	particle_ID = 0; // >> Initializes the ID to 0
 	particle_Types = 3; // >> [[[IMPORTANT]]] INITIALIZE THIS VALUE WITH THE AMOUNT OF DIFFERENT PARTICLE TYPES MINUS ONE.
+
+	if (!berlinSans.loadFromFile("BRLNSR.TTF"))
+	{
+		cout << "Error: Font cannot be loaded" << endl;
+	}
+
+	// Initialize text UI to indicate which particle is currently active
+	Text* line;
+	for (int i = 0; i < particle_Types + 1; i++)
+	{
+		line = new Text;
+		line->setFont(berlinSans);
+		line->setCharacterSize(20);
+		line->setFillColor(Color::White);
+		line->setStyle(Text::Bold);
+		line->setPosition(20, 20 + (50 * i));
+		particleUI.push_back(line);
+	}
+
+	particleUI.at(0)->setString("[1]    [Normal]");
+	particleUI.at(0)->setColor(Color::Yellow);
+	particleUI.at(1)->setString("[2]  [Constant] ");
+	particleUI.at(2)->setString("[3]  [Wave]");
+	particleUI.at(3)->setString("[4]  [Grow]");
 }
 
 // .:[Engine Initialization]:.
@@ -51,18 +75,29 @@ void Engine::input()
 			////////////////
 			if (event.mouseButton.button == sf::Mouse::Right)
 			{
+				// >> Turn formerly active color particle UI listing visually inactive
+				String fullString = particleUI.at(particle_ID)->getString();
+				String workingString = fullString.substring(0, fullString.find(" "));
+				workingString += "  ";
+				workingString += fullString.substring(fullString.find(' ') + 4);
+				particleUI.at(particle_ID)->setString(workingString);
+				particleUI.at(particle_ID)->setColor(Color::White);
+
 				// >> Increments the current particle ID by one.
 				++particle_ID;
 				// >> If it becomes more than the amount of particle types there are, it resets to 0.
 				if (particle_ID > particle_Types)
 				{
 					particle_ID = 0;
-					cout << "DEBUG: PARTICLE ID RESET TO 0" << endl;
 				}
-				else // >> Else loop for debug, can be removed.
-				{
-					cout << "DEBUG: PARTICLE ID INCRIMENTED TO: " << particle_ID << endl;
-				}
+
+				// >> Format and color active particle UI listing
+				fullString = particleUI.at(particle_ID)->getString();
+				workingString = fullString.substring(0, fullString.find(" "));
+				workingString += "    ";
+				workingString += fullString.substring(fullString.find(' ') + 2);
+				particleUI.at(particle_ID)->setString(workingString);
+				particleUI.at(particle_ID)->setColor(Color::Yellow);
 			}
 		}
 	}
@@ -285,6 +320,7 @@ void Engine::update(float dtAsSeconds)
 void Engine::draw()
 {
 	m_Window.clear();
+
 	// Loop through all particles with an iterator and call their draw functions
 	for (vector<Particle*>::iterator it = m_particles.begin(); it != m_particles.end(); )
 	{
@@ -292,6 +328,12 @@ void Engine::draw()
 		currentPointer->draw(m_Window, RenderStates::Default);
 		it++;
 	}
+
+	for (Text* line : particleUI)
+	{
+		m_Window.draw(*line);
+	}
+
 	// Display the window
 	m_Window.display();
 }
