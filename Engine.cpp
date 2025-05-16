@@ -181,6 +181,7 @@ void Engine::input()
 			float x = center.x + circleRadius * cos(angle);
 			float y = center.y + circleRadius * sin(angle);
 			m_particles.push_back(new WaveParticle(m_Window, 25, Vector2i((int)x, (int)y)));
+			m_particles.back()->setTTL(0.001f);
 		}
 
 		// horizontal line
@@ -195,6 +196,7 @@ void Engine::input()
 			float dist = sqrt(dx * dx + dy * dy);
 			if (dist >= circleRadius + 5) { // +5 buffer to leave gap
 				m_particles.push_back(new WaveParticle(m_Window, 30, Vector2i((int)x, (int)y)));
+				m_particles.back()->setTTL(0.001f);
 			}
 		}
 
@@ -210,11 +212,12 @@ void Engine::input()
 			float dist = sqrt(dx * dx + dy * dy);
 			if (dist >= circleRadius + 5) {
 				m_particles.push_back(new WaveParticle(m_Window, 30, Vector2i((int)x, (int)y)));
+				m_particles.back()->setTTL(0.001f);
 			}
 		}
 
 		// 5 petal rose curve
-		int numRoseParticles = 50;  // less is more
+		int numRoseParticles = 99;  // less is more
 		float roseRadius = 150.f;    // < circle radius
 		int k = 5;                   // 5 petals
 
@@ -226,6 +229,7 @@ void Engine::input()
 			float y = center.y + r * sin(theta);
 
 			m_particles.push_back(new WaveParticle(m_Window, 25, Vector2i((int)x, (int)y)));
+			m_particles.back()->setTTL(0.001f);
 		}
 
 		// rectangle shape thingy
@@ -245,8 +249,8 @@ void Engine::input()
 
 
 		// vahjra heart design
-		int heartPoints = 64;  // 
-		float scale = 100.f;
+		int heartPoints = 99;  // #
+		float scale = 123.0f;	// scale
 
 		for (int i = 0; i < heartPoints; ++i) {
 			float theta = i * (2 * M_PI / heartPoints);
@@ -257,22 +261,25 @@ void Engine::input()
 			float y = drectTopCenter.y + r * sin(theta);
 
 			m_particles.push_back(new ConstantParticle(m_Window, 20, Vector2i((int)x, (int)y)));
+			m_particles.back()->setTTL(0.001f);
 		}
 
-		// rectangle border
-		int rectOutlinePoints = 6;
+		// rectangle border  //
+		int rectOutlinePoints = 25;
 		for (int i = 0; i < rectOutlinePoints; ++i) {
 			float t = i / (float)(rectOutlinePoints - 1);
 
 			// LHS
 			float xL = rectX;
 			float yL = rectY + t * rectHeight;
-			m_particles.push_back(new WaveParticle(m_Window, 20, Vector2i((int)xL, (int)yL)));
+			m_particles.push_back(new ConstantParticle(m_Window, 20, Vector2i((int)xL, (int)yL)));
+			m_particles.back()->setTTL(0.001f);
 
 			// RHS
 			float xR = rectX + rectWidth;
 			float yR = rectY + t * rectHeight;
-			m_particles.push_back(new WaveParticle(m_Window, 20, Vector2i((int)xR, (int)yR)));
+			m_particles.push_back(new ConstantParticle(m_Window, 20, Vector2i((int)xR, (int)yR)));
+			m_particles.back()->setTTL(0.001f);
 		}
 
 		// Top and bottom lines of the rectangle
@@ -281,10 +288,12 @@ void Engine::input()
 			float x = rectX + t * rectWidth;
 
 			// Top
-			m_particles.push_back(new WaveParticle(m_Window, 20, Vector2i((int)x, (int)rectY)));
+			m_particles.push_back(new ConstantParticle(m_Window, 20, Vector2i((int)x, (int)rectY)));
+			m_particles.back()->setTTL(0.001f);
 
 			// Bottom
-			m_particles.push_back(new WaveParticle(m_Window, 20, Vector2i((int)x, (int)(rectY + rectHeight))));
+			m_particles.push_back(new ConstantParticle(m_Window, 20, Vector2i((int)x, (int)(rectY + rectHeight))));
+			m_particles.back()->setTTL(0.001f);
 		}
 
 
